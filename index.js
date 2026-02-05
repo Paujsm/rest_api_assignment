@@ -3,12 +3,15 @@ const express = require("express");
 const app = express();
 const userRoutes = require("./routes/userRoutes");
 const expenseRoutes = require("./routes/expenseRoutes");
+const incomeRoutes = requiere("./routes/incomeRoutes");
 
 app.use(express.json());
 
 app.use("/users", userRoutes);
 
 app.use("/expenses", expenseRoutes);
+
+app.use("/incomes", incomeRoutes);
 
 app.get("/", (req, res) => {
   res.send(

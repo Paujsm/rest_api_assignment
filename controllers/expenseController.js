@@ -15,16 +15,17 @@ exports.createExpense = async (req, res) => {
 exports.getAllExpenses = async (req, res) => {
   try {
     const snapshot = await db.collection("expenses").get();
-    const expenses = snapshot.docs.map((doc) => {
-      id: doc.id.at.apply.doc.data();
-    });
+    const expenses = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
     res.status(200).json(expenses);
   } catch (error) {
     res.status(500).json({ error: "Error fetching expenses" });
   }
 };
 
-//U - Update PUT
+//U - Update using ID PUT
 exports.updateExpense = async (req, res) => {
   try {
     const id = req.params.id;

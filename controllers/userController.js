@@ -27,7 +27,7 @@ exports.getAllUsers = async (req, res) => {
   }
 };
 
-//U - Update a parameter in the object PUT
+//U - Update using ID PUT
 exports.updateUser = async (req, res) => {
   try {
     const id = req.params.id;
