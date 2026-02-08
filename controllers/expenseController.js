@@ -8,7 +8,7 @@ exports.createExpense = async (req, res) => {
 
     res
       .status(201)
-      .json({ id: newExpenseRef.key, message: "Expense created succesfully" });
+      .json({ id: newExpenseRef.key, message: "Expense created successfully" });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -39,7 +39,7 @@ exports.updateExpense = async (req, res) => {
     const expenseRef = db.ref("expenses").child(id);
     await expenseRef.update(updatedData);
     res.status(200).json({
-      message: `Expense updated succesfully`,
+      message: `Expense updated successfully`,
       updatedFields: updatedData,
     });
   } catch (error) {
