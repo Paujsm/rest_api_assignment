@@ -3,7 +3,7 @@ const express = require("express");
 const app = express();
 const userRoutes = require("./routes/userRoutes");
 const expenseRoutes = require("./routes/expenseRoutes");
-const incomeRoutes = requiere("./routes/incomeRoutes");
+const incomeRoutes = require("./routes/incomeRoutes");
 
 app.use(express.json());
 

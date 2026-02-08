@@ -3,55 +3,57 @@ const db = require("../config/firebase");
 //C - create user POST
 exports.createUser = async (req, res) => {
   try {
-    const userData = req.body;
-    const docRef = await db.collection("users").add(userData);
-    res.status(201).json({
-      message: "User created successfully",
-      id: docRef.id,
-    });
-  } catch (error) {
+    const newUserRef = db.ref("users").push();
+    await newUserRef.set(req.body);
+
     res
-      .status(500)
-      .json({ error: "Failed to create user", details: error.message });
+      .status(201)
+      .json({ id: newUserRef.key, message: "User created successfully" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };
 
 //R - Retrive all users GET
 exports.getAllUsers = async (req, res) => {
   try {
-    const snapshot = await db.collection("users").get();
-    const users = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    const snapshot = await db.ref("users").once("value");
+    const data = snapshot.val();
+    const users = data
+      ? Object.keys(data).map((key) => ({
+          id: key,
+          ...data[key],
+        }))
+      : [];
     res.status(200).json(users);
   } catch (error) {
-    res.status(500).json({ error: "Error fetching users" });
+    res.status(500).json({ error: error.message });
   }
 };
 
 //U - Update using ID PUT
 exports.updateUser = async (req, res) => {
   try {
-    const id = req.params.id;
+    const { id } = req.params;
     const updatedData = req.body;
-    const userRef = db.collection("users").doc(id);
+    const userRef = db.ref("users").child(id);
     await userRef.update(updatedData);
     res.status(200).json({
-      message: `User ${id} updated successfully`,
+      message: `User updated successfully`,
       updatedFields: updatedData,
     });
   } catch (error) {
-    res
-      .status(500)
-      .json({ error: "Dailed to update user", details: error.message });
+    res.status(500).json({ error: error.message });
   }
 };
 
 //D - Delete user using id DELETE /users/:id
 exports.deleteUser = async (req, res) => {
   try {
-    const id = req.params.id;
-    await db.collection("users").doc(id).delete();
-    res.status(200).json({ message: `User ${id} deleted successfully` });
+    const { id } = req.params;
+    await db.ref("users").child(id).remove();
+    res.status(200).json({ message: `User deleted successfully` });
   } catch (error) {
-    res.status(500).json({ error: "Failed to delete user" });
+    res.status(500).json({ error: error.message });
   }
 };

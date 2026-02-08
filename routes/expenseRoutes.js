@@ -1,10 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const userController = require("../controllers/expenseController");
+const expenseController = require("../controllers/expenseController");
 
-router.post("/", userController.createExpense);
-router.get("/", userController.getAllExpenses);
-router.put("/:id", userController.updateExpense);
-router.delete("/:id", userController.deleteExpense);
+router.post("/", expenseController.createExpense);
+router.get("/", expenseController.getAllExpenses);
+router.put("/:id", expenseController.updateExpense);
+router.delete("/:id", expenseController.deleteExpense);
 
 module.exports = router;
