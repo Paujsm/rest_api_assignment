@@ -1,6 +1,6 @@
 const db = require("../config/firebase");
 
-//C - Create an expense
+//C - Create an expense POST
 exports.createExpense = async (req, res) => {
   try {
     const newExpenseRef = db.ref("expenses").push();
@@ -37,8 +37,19 @@ exports.updateExpense = async (req, res) => {
     const { id } = req.params;
     const updatedData = req.body;
     const expenseRef = db.ref("expenses").child(id);
+
+    const snapshot = await db.ref("expenses").child(id).once("value");
+
+    if (!snapshot.exists()) {
+      return res.status(404).json({
+        success: false,
+        message: "Not found. Invalid ID.",
+      });
+    }
+
     await expenseRef.update(updatedData);
     res.status(200).json({
+      success: true,
       message: `Expense updated successfully`,
       updatedFields: updatedData,
     });
@@ -51,8 +62,20 @@ exports.updateExpense = async (req, res) => {
 exports.deleteExpense = async (req, res) => {
   try {
     const { id } = req.params;
+
+    const snapshot = await db.ref("expenses").child(id).once("value");
+
+    if (!snapshot.exists()) {
+      return res.status(404).json({
+        success: false,
+        message: "Not found. Invalid ID.",
+      });
+    }
+
     await db.ref("expenses").child(id).remove();
-    res.status(200).json({ message: `Expense deleted successfully` });
+    res
+      .status(200)
+      .json({ success: true, message: `Expense deleted successfully` });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

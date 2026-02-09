@@ -37,8 +37,19 @@ exports.updateIncome = async (req, res) => {
     const { id } = req.params;
     const updatedData = req.body;
     const incomeRef = db.ref("incomes").child(id);
+
+    const snapshot = await db.ref("incomes").child(id).once("value");
+
+    if (!snapshot.exists()) {
+      return res.status(404).json({
+        success: false,
+        message: "Not found. Invalid ID.",
+      });
+    }
+
     await incomeRef.update(updatedData);
     res.status(200).json({
+      success: true,
       message: `Income updated successfully`,
       updatedFields: updatedData,
     });
@@ -51,8 +62,19 @@ exports.updateIncome = async (req, res) => {
 exports.deleteIncome = async (req, res) => {
   try {
     const { id } = req.params;
+    const snapshot = await db.ref("incomes").child(id).once("value");
+
+    if (!snapshot.exists()) {
+      return res.status(404).json({
+        success: false,
+        message: "Not found. Invalid ID.",
+      });
+    }
+
     await db.ref("incomes").child(id).remove();
-    res.status(200).json({ message: "Income deleted successfully" });
+    res
+      .status(200)
+      .json({ success: true, message: "Income deleted successfully" });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

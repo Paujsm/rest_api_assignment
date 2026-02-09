@@ -5,7 +5,6 @@ exports.createUser = async (req, res) => {
   try {
     const newUserRef = db.ref("users").push();
     await newUserRef.set(req.body);
-
     res
       .status(201)
       .json({ id: newUserRef.key, message: "User created successfully" });
@@ -37,8 +36,19 @@ exports.updateUser = async (req, res) => {
     const { id } = req.params;
     const updatedData = req.body;
     const userRef = db.ref("users").child(id);
+
+    const snapshot = await db.ref("users").child(id).once("value");
+
+    if (!snapshot.exists()) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found. Invalid ID.",
+      });
+    }
+
     await userRef.update(updatedData);
     res.status(200).json({
+      success: true,
       message: `User updated successfully`,
       updatedFields: updatedData,
     });
@@ -51,8 +61,19 @@ exports.updateUser = async (req, res) => {
 exports.deleteUser = async (req, res) => {
   try {
     const { id } = req.params;
+    const snapshot = await db.ref("users").child(id).once("value");
+
+    if (!snapshot.exists()) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found. Invalid ID.",
+      });
+    }
+
     await db.ref("users").child(id).remove();
-    res.status(200).json({ message: `User deleted successfully` });
+    res
+      .status(200)
+      .json({ success: true, message: `User deleted successfully` });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
