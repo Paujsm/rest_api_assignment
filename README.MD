@@ -60,23 +60,11 @@ FIREBASE_PRIVATE_KEY= "your_private_key_string"
 
 Launch the application by running:
 
-# Option 1: Using npm script
-
     ```bash
-    npm start
-    ```
-
-# Option 2: Running directly with Node
-
-    ```bash
-    node index.js
-    ```
-
-````bash
     npm run dev
     ```
 
-6. **Test the API:**
+6. **Test the API**
 
 You can now send requests to `http://localhost:3000/users` using Postman.
 
@@ -111,4 +99,7 @@ The following core libraries were used to build this system:
 - **[Express.js](https://expressjs.com/):** A fast and minimalist web framework for Node.js, used to manage our API routes and HTTP requests.
 - **[Firebase Admin SDK](https://firebase.google.com/docs/admin/setup):** The official library used to securely communicate with Google Firebase.
 - **[Dotenv](https://www.npmjs.com/package/dotenv):** A zero-dependency module that loads environment variables from a `.env` file into `process.env`, ensuring secure credential management.
-````
+
+```
+
+```
